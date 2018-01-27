@@ -31,4 +31,5 @@ Release/**
 .settings/**
 core/**
 libraries/**
-
+.project
+.cproject
