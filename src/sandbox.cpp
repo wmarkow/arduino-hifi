@@ -5,18 +5,21 @@
 #include <PT2314.h>
 
 #include "Arduino.h"
-#include "hardware/RDA5870Radio.h"
 #include "hardware/AnalogMonostableSwitch.h"
 #include "hardware/PreAmpControlPanel.h"
 #include "SerialRadio.h"
 #include "hardware/PT2314PreAmp.h"
+#include "hardware/RDA5807PreAmp.h"
 
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
 BigCrystal bigLcd(&lcd);
 
 // hardware objects
-RDA5807Radio radio;
+RDA5807M radio;
 PT2314 pt2314;
+
+// preamplifiers
+//RDA5807PreAmp rdaPreAmp(&radio);
 PT2314PreAmp pt2314PreAmp(&pt2314);
 
 PreAmpControlPanel preAmpControlPanel(&pt2314PreAmp);
@@ -55,6 +58,18 @@ void updateDisplay()
    radio.getFrequency(); // need to call it to get the current frequency from the chip
    radio.formatFrequency(freq, 11);
    bigLcd.print(freq);
+
+   // display the input channel
+   bigLcd.setCursor(0, 3);
+   uint8_t channel = preAmpControlPanel.getPreAmp()->getInputChannel();
+   if (channel == 0)
+   {
+      bigLcd.print(F("Radio   "));
+   }
+   if (channel == 1)
+   {
+      bigLcd.print(F("Gramofon"));
+   }
 }
 
 void onLcdKeypadRightPressed()
@@ -117,7 +132,7 @@ void setup()
    radio.debugEnable();
    radio.setMono(false);
    radio.setMute(false);
-   radio.setVolume(100);
+   radio.setVolume(15);
 
    radio.setFrequency(9300);
    serialRadio.init();
