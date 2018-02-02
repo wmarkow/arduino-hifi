@@ -32,7 +32,19 @@ AnalogMonostableSwitch lcdKeypadRight(0, 475, 525);
 unsigned long lastDisplayUpdateTime = 0;
 unsigned long lastRdsCheckTime = 0;
 
-void updateDisplay()
+void initLcd()
+{
+   bigLcd.begin(20, 4);
+   bigLcd.setAppendExtraSpaceBetweenCharacters(false);
+   lcd.home();
+   lcd.clear();
+   lcd.backlight();
+   lcd.setBacklightPin(3, POSITIVE);
+   lcd.setBacklight(HIGH);
+   lcd.print("Uruchamianie...");
+}
+
+void updateDisplay(boolean checkLcdFailure)
 {
    lcd.setCursor(18, 2);
 
@@ -58,6 +70,17 @@ void updateDisplay()
    radio.getFrequency(); // need to call it to get the current frequency from the chip
    radio.formatFrequency(freq, 11);
    bigLcd.print(freq);
+
+   if (checkLcdFailure)
+   {
+      char data = (char)lcd.getCharAt(0, 3);
+      Serial.println((uint8_t)data);
+      if(data != 'R' && data != 'G')
+      {
+         Serial.println("Probably LCD failure");
+         initLcd();
+      }
+   }
 
    // display the input channel
    bigLcd.setCursor(0, 3);
@@ -93,14 +116,7 @@ void setup()
 {
    Serial.begin(57600);
 
-   bigLcd.begin(20, 4);
-   bigLcd.setAppendExtraSpaceBetweenCharacters(false);
-   lcd.home();
-   lcd.clear();
-   lcd.backlight();
-   lcd.setBacklightPin(3, POSITIVE);
-   lcd.setBacklight(HIGH);
-   lcd.print("Uruchamianie...");
+   initLcd();
 
    lcdKeypadRight.init();
    lcdKeypadRight.setOnSwitchOnPtr(&onLcdKeypadRightPressed);
@@ -138,7 +154,7 @@ void setup()
    serialRadio.init();
 
    lcd.clear();
-   updateDisplay();
+   updateDisplay(false);
 }
 
 void loop()
@@ -148,7 +164,7 @@ void loop()
 
    if (millis() - lastDisplayUpdateTime > 250)
    {
-      updateDisplay();
+      updateDisplay(true);
       preAmpControlPanel.loop();
       lastDisplayUpdateTime = millis();
    }
