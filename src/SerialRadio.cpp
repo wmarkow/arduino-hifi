@@ -7,7 +7,7 @@
 
 #include "SerialRadio.h"
 
-RDSParser rds;
+CRDSParser rds;
 
 SerialRadio::SerialRadio(RADIO* radio)
 {
