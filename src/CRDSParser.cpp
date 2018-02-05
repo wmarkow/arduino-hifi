@@ -13,17 +13,17 @@
 ///
 /// ChangeLog see RDSParser.h.
 
-#include "RDSParser.h"
+#include "CRDSParser.h"
 
 #define DEBUG_FUNC0(fn)          { Serial.print(fn); Serial.println("()"); }
 
 /// Setup the RDS object and initialize private variables to 0.
-RDSParser::RDSParser() {
-  memset(this, 0, sizeof(RDSParser));
-} // RDSParser()
+CRDSParser::CRDSParser() {
+  memset(this, 0, sizeof(CRDSParser));
+} // CRDSParser()
 
 
-void RDSParser::init() {
+void CRDSParser::init() {
   strcpy(_PSName1, "--------");
   strcpy(_PSName2, _PSName1);
   strcpy(programServiceName, "        ");
@@ -32,24 +32,24 @@ void RDSParser::init() {
 } // init()
 
 
-void RDSParser::attachServicenNameCallback(receiveServicenNameFunction newFunction)
+void CRDSParser::attachServicenNameCallback(receiveServicenNameFunction newFunction)
 {
   _sendServiceName = newFunction;
 } // attachServicenNameCallback
 
-void RDSParser::attachTextCallback(receiveTextFunction newFunction)
+void CRDSParser::attachTextCallback(receiveTextFunction newFunction)
 {
   _sendText = newFunction;
 } // attachTextCallback
 
 
-void RDSParser::attachTimeCallback(receiveTimeFunction newFunction)
+void CRDSParser::attachTimeCallback(receiveTimeFunction newFunction)
 {
   _sendTime = newFunction;
 } // attachTimeCallback
 
 
-void RDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3, uint16_t block4)
+void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3, uint16_t block4)
 {
   // DEBUG_FUNC0("process");
   uint8_t  idx; // index of rdsText

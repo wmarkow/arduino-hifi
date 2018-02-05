@@ -19,8 +19,8 @@
 /// 
 
 
-#ifndef __RDSPARSER_H__
-#define __RDSPARSER_H__
+#ifndef __CRDSPARSER_H__
+#define __CRDSPARSER_H__
 
 #include <Arduino.h>
 
@@ -33,10 +33,10 @@ extern "C" {
 
 
 /// Library for parsing RDS data values and extracting information.
-class RDSParser
+class CRDSParser
 {
 public:
-  RDSParser(); ///< create a new object from this class.
+  CRDSParser(); ///< create a new object from this class.
 
   /// Initialize internal variables before starting or after a change to another channel.
   void init();
@@ -66,6 +66,6 @@ private:
 
   char _RDSText[64 + 2];
 
-}; //RDSParser
+}; //CRDSParser
 
-#endif //__RDSPARSER_H__
+#endif //__CRDSPARSER_H__
