@@ -10,6 +10,7 @@
 #include "SerialRadio.h"
 #include "hardware/PT2314PreAmp.h"
 #include "hardware/RDA5807PreAmp.h"
+#include "RDSQuality.h"
 
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
 BigCrystal bigLcd(&lcd);
@@ -17,6 +18,7 @@ BigCrystal bigLcd(&lcd);
 // hardware objects
 RDA5807M radio;
 PT2314 pt2314;
+RDSQuality rdsQuality;
 
 // preamplifiers
 //RDA5807PreAmp rdaPreAmp(&radio);
@@ -74,7 +76,7 @@ void updateDisplay(boolean checkLcdFailure)
    if (checkLcdFailure)
    {
       char data = (char)lcd.getCharAt(0, 3);
-      Serial.println((uint8_t)data);
+//      Serial.println((uint8_t)data);
       if(data != 'R' && data != 'G')
       {
          Serial.println("Probably LCD failure");
@@ -144,8 +146,8 @@ void setup()
    pt2314.attenuation(100, 100);
    pt2314.gain(1);
 
-   radio.init();
    radio.debugEnable();
+   radio.init();
    radio.setMono(false);
    radio.setMute(false);
    radio.setVolume(15);
@@ -161,12 +163,15 @@ void loop()
 {
    lcdKeypadRight.loop();
    lcdKeypadLeft.loop();
+   rdsQuality.loop();
 
    if (millis() - lastDisplayUpdateTime > 250)
    {
       updateDisplay(true);
       preAmpControlPanel.loop();
       lastDisplayUpdateTime = millis();
+      Serial.print("RDSQ= ");
+      Serial.println(rdsQuality.getRDSQuality());
    }
 
    radio.checkRDS();

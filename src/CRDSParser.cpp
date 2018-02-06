@@ -14,8 +14,11 @@
 /// ChangeLog see RDSParser.h.
 
 #include "CRDSParser.h"
+#include "RDSQuality.h"
 
 #define DEBUG_FUNC0(fn)          { Serial.print(fn); Serial.println("()"); }
+
+extern RDSQuality rdsQuality;
 
 /// Setup the RDS object and initialize private variables to 0.
 CRDSParser::CRDSParser()
@@ -72,13 +75,20 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
    {
       // reset all the RDS info.
       init();
+      rdsQuality.hitInvalid();
+
       // Send out empty data
       if (_sendServiceName)
          _sendServiceName(programServiceName);
       if (_sendText)
          _sendText("");
+
       return;
-   } // if
+   }
+   else
+   {
+      rdsQuality.hitValid();
+   }
 
    // analyzing Block 2
    rdsGroupType = 0x0A | ((block2 & 0xF000) >> 8) | ((block2 & 0x0800) >> 11);
