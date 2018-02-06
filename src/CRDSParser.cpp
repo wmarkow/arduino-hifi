@@ -238,6 +238,13 @@ bool CRDSParser::isValid(uint16_t block1, uint16_t block2, uint16_t block3)
       return false;
    }
 
+   uint8_t versionCode = ((block2 & 0x0800) >> 11);
+   if (versionCode == 1 && (block1 != block3))
+   {
+      // PI code mismatch in version B
+      return false;
+   }
+
    return true;
 }
 
