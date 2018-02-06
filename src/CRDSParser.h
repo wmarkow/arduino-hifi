@@ -52,6 +52,7 @@ private:
    // ----- actual RDS values
    uint8_t rdsGroupType, rdsTP, rdsPTY;
    uint8_t _textAB, _last_textAB, _lastTextIDX;
+   char _RDSText[64 + 2];
 
    // Program Service Name
    char _PSName1[10]; // including trailing '\00' character.
@@ -64,7 +65,7 @@ private:
 
    uint16_t _lastRDSMinutes; ///< last RDS time send to callback.
 
-   char _RDSText[64 + 2];
+   bool isValid(uint16_t block1, uint16_t block2, uint16_t block3);
 
 };
 //CRDSParser

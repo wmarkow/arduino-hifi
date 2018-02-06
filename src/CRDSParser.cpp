@@ -62,6 +62,12 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
    uint16_t mins; ///< RDS time in minutes
    uint8_t off;   ///< RDS time offset and sign
 
+   if (!isValid(block1, block2, block3))
+   {
+      rdsQuality.hitInvalid();
+      return;
+   }
+
    Serial.print('(');
    Serial.print(block1, HEX);
    Serial.print(' ');
@@ -85,10 +91,8 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
 
       return;
    }
-   else
-   {
-      rdsQuality.hitValid();
-   }
+
+   rdsQuality.hitValid();
 
    // analyzing Block 2
    rdsGroupType = 0x0A | ((block2 & 0xF000) >> 8) | ((block2 & 0x0800) >> 11);
@@ -223,5 +227,18 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
          break;
    }
 } // processData()
+
+bool CRDSParser::isValid(uint16_t block1, uint16_t block2, uint16_t block3)
+{
+   uint8_t block1CountryCode = block1 >> 12;
+
+   // validate groups from Poland
+   if (block1CountryCode != 3)
+   {
+      return false;
+   }
+
+   return true;
+}
 
 // End.
