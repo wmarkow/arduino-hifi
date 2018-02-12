@@ -56,6 +56,8 @@ private:
 
    // Program Service Name
    char currentPSName[10]; // including trailing '\00' character.
+   uint8_t lastPSNameIdx;
+   bool psNameSync;
 
    receiveServicenNameFunction _sendServiceName; ///< Registered ServiceName function.
    receiveTimeFunction _sendTime; ///< Registered Time function.

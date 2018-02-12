@@ -24,6 +24,8 @@ extern RDSQuality rdsQuality;
 CRDSParser::CRDSParser()
 {
    memset(this, 0, sizeof(CRDSParser));
+   lastPSNameIdx = 0;
+   psNameSync = false;
 } // CRDSParser()
 
 void CRDSParser::init()
@@ -112,15 +114,27 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
          currentPSName[idx + 1] = c2;
          currentPSName[8] = '\0';
 
+         if (idx == 0)
+         {
+            psNameSync = true;
+         }
+
+         if (idx > 0 && lastPSNameIdx + 2 != idx)
+         {
+            // some frames are missed
+            psNameSync = false;
+         }
+
          if (idx == 6)
          {
             // received last two characters; publish station name
-            if (_sendServiceName)
+            if (_sendServiceName && psNameSync)
             {
                _sendServiceName(currentPSName);
             }
          }
 
+         lastPSNameIdx = idx;
          break;
 
       case 0x2A:
