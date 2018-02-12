@@ -55,9 +55,7 @@ private:
    char _RDSText[64 + 2];
 
    // Program Service Name
-   char _PSName1[10]; // including trailing '\00' character.
-   char _PSName2[10]; // including trailing '\00' character.
-   char programServiceName[10]; // found station name or empty. Is max. 8 character long.
+   char currentPSName[10]; // including trailing '\00' character.
 
    receiveServicenNameFunction _sendServiceName; ///< Registered ServiceName function.
    receiveTimeFunction _sendTime; ///< Registered Time function.

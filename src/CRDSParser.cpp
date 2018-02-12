@@ -28,9 +28,7 @@ CRDSParser::CRDSParser()
 
 void CRDSParser::init()
 {
-   strcpy(_PSName1, "--------");
-   strcpy(_PSName2, _PSName1);
-   strcpy(programServiceName, "        ");
+   strcpy(currentPSName, "--------");
    memset(_RDSText, 0, sizeof(_RDSText));
    _lastTextIDX = 0;
 } // init()
@@ -68,14 +66,14 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
       return;
    }
 
-   Serial.print('(');
-   Serial.print(block1, HEX);
-   Serial.print(' ');
-   Serial.print(block2, HEX);
-   Serial.print(' ');
-   Serial.print(block3, HEX);
-   Serial.print(' ');
-   Serial.println(block4, HEX);
+//   Serial.print('(');
+//   Serial.print(block1, HEX);
+//   Serial.print(' ');
+//   Serial.print(block2, HEX);
+//   Serial.print(' ');
+//   Serial.print(block3, HEX);
+//   Serial.print(' ');
+//   Serial.println(block4, HEX);
 
    if (block1 == 0)
    {
@@ -85,7 +83,7 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
 
       // Send out empty data
       if (_sendServiceName)
-         _sendServiceName(programServiceName);
+         _sendServiceName(currentPSName);
       if (_sendText)
          _sendText("");
 
@@ -110,35 +108,19 @@ void CRDSParser::processData(uint16_t block1, uint16_t block2, uint16_t block3,
          c1 = block4 >> 8;
          c2 = block4 & 0x00FF;
 
-         // check that the data was received successfully twice
-         // before publishing the station name
+         currentPSName[idx] = c1;
+         currentPSName[idx + 1] = c2;
+         currentPSName[8] = '\0';
 
-         if ((_PSName1[idx] == c1) && (_PSName1[idx + 1] == c2))
+         if (idx == 6)
          {
-            // retrieved the text a second time: store to _PSName2
-            _PSName2[idx] = c1;
-            _PSName2[idx + 1] = c2;
-            _PSName2[8] = '\0';
-
-            if ((idx == 6) && strcmp(_PSName1, _PSName2) == 0)
+            // received last two characters; publish station name
+            if (_sendServiceName)
             {
-               if (strcmp(_PSName2, programServiceName) != 0)
-               {
-                  // publish station name
-                  strcpy(programServiceName, _PSName2);
-                  if (_sendServiceName)
-                     _sendServiceName(programServiceName);
-               } // if
-            } // if
-         } // if
+               _sendServiceName(currentPSName);
+            }
+         }
 
-         if ((_PSName1[idx] != c1) || (_PSName1[idx + 1] != c2))
-         {
-            _PSName1[idx] = c1;
-            _PSName1[idx + 1] = c2;
-            _PSName1[8] = '\0';
-            // Serial.println(_PSName1);
-         } // if
          break;
 
       case 0x2A:
