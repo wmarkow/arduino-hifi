@@ -5,32 +5,31 @@
  *      Author: wmarkowski
  */
 
-#include "PreAmpControlPanel.h"
-
 #include <Arduino.h>
 #include <pins_arduino.h>
 #include <stdint.h>
+#include "SegmentPreAmp.h"
 
 #define VOLUME_ANALOG_INPUT A1
 #define INPUT_CHANNEL_ANALOG_INPUT A2
 
-PreAmpControlPanel::PreAmpControlPanel(PreAmp *preAmp)
+SegmentPreAmp::SegmentPreAmp(PreAmp *preAmp)
 {
    this->preAmp = preAmp;
 }
 
-PreAmp* PreAmpControlPanel::getPreAmp()
+PreAmp* SegmentPreAmp::getPreAmp()
 {
    return preAmp;
 }
 
-void PreAmpControlPanel::loop()
+void SegmentPreAmp::loop()
 {
    checkVolumePot();
    checkInputChannelPot();
 }
 
-void PreAmpControlPanel::checkVolumePot()
+void SegmentPreAmp::checkVolumePot()
 {
    uint16_t volumeInput = analogRead(VOLUME_ANALOG_INPUT);
    uint8_t volume = map(volumeInput, 0, 1023, preAmp->MIN_VOLUME,
@@ -39,7 +38,7 @@ void PreAmpControlPanel::checkVolumePot()
    preAmp->setVolume(volume);
 }
 
-void PreAmpControlPanel::checkInputChannelPot()
+void SegmentPreAmp::checkInputChannelPot()
 {
    uint16_t volumeInput = analogRead(INPUT_CHANNEL_ANALOG_INPUT);
 

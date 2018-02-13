@@ -5,12 +5,12 @@
 
 #include "Arduino.h"
 #include "hardware/AnalogMonostableSwitch.h"
-#include "segment/preamp/PreAmpControlPanel.h"
 #include "segment/tuner/serialradio/SerialRadio.h"
 #include "segment/preamp/hardware/PT2314PreAmp.h"
 #include "segment/preamp/hardware/RDA5807PreAmp.h"
 #include "segment/tuner/rds/RDSQuality.h"
 #include "display/display.h"
+#include "segment/preamp/SegmentPreAmp.h"
 
 // hardware objects
 RDA5807M radio;
@@ -21,7 +21,7 @@ RDSQuality rdsQuality;
 //RDA5807PreAmp rdaPreAmp(&radio);
 PT2314PreAmp pt2314PreAmp(&pt2314);
 
-PreAmpControlPanel preAmpControlPanel(&pt2314PreAmp);
+SegmentPreAmp segmentPreAmp(&pt2314PreAmp);
 //PreAmpControlPanel preAmpControlPanel(&radio);
 
 SerialRadio serialRadio(&radio);
@@ -104,7 +104,7 @@ void loop()
    if (millis() - lastDisplayUpdateTime > 250)
    {
       updateDisplay(true);
-      preAmpControlPanel.loop();
+      segmentPreAmp.loop();
       lastDisplayUpdateTime = millis();
 //      Serial.print("RDSQ= ");
 //      Serial.println(rdsQuality.getRDSQuality());

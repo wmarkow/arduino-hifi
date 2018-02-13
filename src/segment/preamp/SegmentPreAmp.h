@@ -5,21 +5,21 @@
  *      Author: wmarkowski
  */
 
-#ifndef HARDWARE_PREAMPCONTROLPANEL_H_
-#define HARDWARE_PREAMPCONTROLPANEL_H_
+#ifndef HARDWARE_SEGMENTPREAMP_H_
+#define HARDWARE_SEGMENTPREAMP_H_
 
 #include "hardware/PreAmp.h"
 
-class PreAmpControlPanel
+class SegmentPreAmp
 {
 private:
    PreAmp *preAmp;
    void checkVolumePot();
    void checkInputChannelPot();
 public:
-   PreAmpControlPanel(PreAmp *preAmp);
+   SegmentPreAmp(PreAmp *preAmp);
    PreAmp* getPreAmp();
    void loop();
 };
 
-#endif /* HARDWARE_PREAMPCONTROLPANEL_H_ */
+#endif /* HARDWARE_SEGMENTPREAMP_H_ */

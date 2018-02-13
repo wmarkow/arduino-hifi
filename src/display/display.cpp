@@ -9,12 +9,13 @@
 #include <BigCrystal.h>
 #include <RDA5807M.h>
 #include "display.h"
-#include "../segment/preamp/PreAmpControlPanel.h"
+
+#include "../segment/preamp/SegmentPreAmp.h"
 
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
 BigCrystal bigLcd(&lcd);
 
-extern PreAmpControlPanel preAmpControlPanel;
+extern SegmentPreAmp segmentPreAmp;
 extern RDA5807M radio;
 
 void initLcd()
@@ -33,7 +34,7 @@ void updateDisplay(boolean checkLcdFailure)
 {
    lcd.setCursor(18, 2);
 
-   uint8_t volume = preAmpControlPanel.getPreAmp()->getVolume();
+   uint8_t volume = segmentPreAmp.getPreAmp()->getVolume();
    char vol[3];
    itoa(volume, vol, 10);
    if (volume <= 9)
@@ -69,7 +70,7 @@ void updateDisplay(boolean checkLcdFailure)
 
    // display the input channel
    bigLcd.setCursor(0, 3);
-   uint8_t channel = preAmpControlPanel.getPreAmp()->getInputChannel();
+   uint8_t channel = segmentPreAmp.getPreAmp()->getInputChannel();
    if (channel == 0)
    {
       bigLcd.print(F("Radio   "));
