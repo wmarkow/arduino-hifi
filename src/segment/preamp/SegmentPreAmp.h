@@ -21,6 +21,7 @@ public:
    void init();
    void loop();
    PreAmp* getPreAmp();
+   void updateDisplay();
 };
 
 #endif /* HARDWARE_SEGMENTPREAMP_H_ */

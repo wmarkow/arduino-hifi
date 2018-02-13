@@ -10,6 +10,8 @@
 #include <stdint.h>
 
 #include <PT2314.h>
+#include <LiquidCrystal_I2C.h>
+#include <BigCrystal.h>
 #include "SegmentPreAmp.h"
 #include "hardware/PT2314PreAmp.h"
 
@@ -19,6 +21,9 @@
 PT2314 pt2314;
 PT2314PreAmp pt2314PreAmp(&pt2314);
 SegmentPreAmp segmentPreAmp(&pt2314PreAmp);
+
+extern LiquidCrystal_I2C lcd;
+extern BigCrystal bigLcd;
 
 SegmentPreAmp::SegmentPreAmp(PreAmp *preAmp)
 {
@@ -54,6 +59,39 @@ void SegmentPreAmp::loop()
 {
    checkVolumePot();
    checkInputChannelPot();
+}
+
+void SegmentPreAmp::updateDisplay()
+{
+   lcd.setCursor(18, 2);
+
+   uint8_t volume = segmentPreAmp.getPreAmp()->getVolume();
+   char vol[3];
+   itoa(volume, vol, 10);
+   if (volume <= 9)
+   {
+      bigLcd.setCursor(14, 2);
+      bigLcd.print(F("   "));
+      bigLcd.setCursor(14, 3);
+      bigLcd.print(F("   "));
+      bigLcd.printBig(vol, 17, 2);
+   }
+   else
+   {
+      bigLcd.printBig(vol, 14, 2);
+   }
+
+   // display the input channel
+   bigLcd.setCursor(0, 3);
+   uint8_t channel = segmentPreAmp.getPreAmp()->getInputChannel();
+   if (channel == 0)
+   {
+      bigLcd.print(F("Radio   "));
+   }
+   if (channel == 1)
+   {
+      bigLcd.print(F("Gramofon"));
+   }
 }
 
 void SegmentPreAmp::checkVolumePot()

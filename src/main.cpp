@@ -9,6 +9,7 @@
 #include "segment/tuner/rds/RDSQuality.h"
 #include "display/display.h"
 #include "segment/preamp/SegmentPreAmp.h"
+#include "segment/display/SegmentDisplay.h"
 
 // hardware objects
 RDA5807M radio;
@@ -23,6 +24,7 @@ unsigned long lastRdsCheckTime = 0;
 
 extern LiquidCrystal_I2C lcd;
 extern SegmentPreAmp segmentPreAmp;
+extern SegmentDisplay segmentDisplay;
 
 void onLcdKeypadRightPressed()
 {
@@ -45,7 +47,7 @@ void setup()
 {
    Serial.begin(57600);
 
-   initLcd();
+   segmentDisplay.init();
 
    lcdKeypadRight.init();
    lcdKeypadRight.setOnSwitchOnPtr(&onLcdKeypadRightPressed);
@@ -79,6 +81,8 @@ void loop()
 
    if (millis() - lastDisplayUpdateTime > 250)
    {
+      segmentDisplay.checkPhonoIssue();
+      segmentPreAmp.updateDisplay();
       updateDisplay(true);
       segmentPreAmp.loop();
       lastDisplayUpdateTime = millis();
