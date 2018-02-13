@@ -6,10 +6,10 @@
 #include "Arduino.h"
 #include "hardware/AnalogMonostableSwitch.h"
 #include "hardware/PreAmpControlPanel.h"
-#include "serialradio/SerialRadio.h"
+#include "segment/tuner/serialradio/SerialRadio.h"
 #include "hardware/PT2314PreAmp.h"
 #include "hardware/RDA5807PreAmp.h"
-#include "rds/RDSQuality.h"
+#include "segment/tuner/rds/RDSQuality.h"
 #include "display/display.h"
 
 // hardware objects
