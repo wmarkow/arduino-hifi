@@ -170,8 +170,8 @@ void loop()
       updateDisplay(true);
       preAmpControlPanel.loop();
       lastDisplayUpdateTime = millis();
-      Serial.print("RDSQ= ");
-      Serial.println(rdsQuality.getRDSQuality());
+//      Serial.print("RDSQ= ");
+//      Serial.println(rdsQuality.getRDSQuality());
    }
 
    radio.checkRDS();
