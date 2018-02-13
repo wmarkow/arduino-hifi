@@ -18,8 +18,9 @@ private:
    void checkInputChannelPot();
 public:
    SegmentPreAmp(PreAmp *preAmp);
-   PreAmp* getPreAmp();
+   void init();
    void loop();
+   PreAmp* getPreAmp();
 };
 
 #endif /* HARDWARE_SEGMENTPREAMP_H_ */

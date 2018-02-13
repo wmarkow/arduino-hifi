@@ -8,10 +8,17 @@
 #include <Arduino.h>
 #include <pins_arduino.h>
 #include <stdint.h>
+
+#include <PT2314.h>
 #include "SegmentPreAmp.h"
+#include "hardware/PT2314PreAmp.h"
 
 #define VOLUME_ANALOG_INPUT A1
 #define INPUT_CHANNEL_ANALOG_INPUT A2
+
+PT2314 pt2314;
+PT2314PreAmp pt2314PreAmp(&pt2314);
+SegmentPreAmp segmentPreAmp(&pt2314PreAmp);
 
 SegmentPreAmp::SegmentPreAmp(PreAmp *preAmp)
 {
@@ -21,6 +28,26 @@ SegmentPreAmp::SegmentPreAmp(PreAmp *preAmp)
 PreAmp* SegmentPreAmp::getPreAmp()
 {
    return preAmp;
+}
+
+void SegmentPreAmp::init()
+{
+   uint8_t q = 0;
+   bool res = false;
+   for (q = 0; q < 20; q++)
+   {
+      res = pt2314.init();
+      if (res == true)
+      {
+         break;
+      }
+      delay(100);
+   }
+
+   pt2314.channel(0);
+   pt2314.volume(1);
+   pt2314.attenuation(100, 100);
+   pt2314.gain(1);
 }
 
 void SegmentPreAmp::loop()

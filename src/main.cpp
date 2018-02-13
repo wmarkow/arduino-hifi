@@ -1,28 +1,18 @@
 #include <Wire.h>
 #include <RDSParser.h>
 #include <LiquidCrystal_I2C.h>
-#include <PT2314.h>
+#include <RDA5807M.h>
 
 #include "Arduino.h"
 #include "hardware/AnalogMonostableSwitch.h"
 #include "segment/tuner/serialradio/SerialRadio.h"
-#include "segment/preamp/hardware/PT2314PreAmp.h"
-#include "segment/preamp/hardware/RDA5807PreAmp.h"
 #include "segment/tuner/rds/RDSQuality.h"
 #include "display/display.h"
 #include "segment/preamp/SegmentPreAmp.h"
 
 // hardware objects
 RDA5807M radio;
-PT2314 pt2314;
 RDSQuality rdsQuality;
-
-// preamplifiers
-//RDA5807PreAmp rdaPreAmp(&radio);
-PT2314PreAmp pt2314PreAmp(&pt2314);
-
-SegmentPreAmp segmentPreAmp(&pt2314PreAmp);
-//PreAmpControlPanel preAmpControlPanel(&radio);
 
 SerialRadio serialRadio(&radio);
 AnalogMonostableSwitch lcdKeypadLeft(0, 0, 50);
@@ -32,6 +22,7 @@ unsigned long lastDisplayUpdateTime = 0;
 unsigned long lastRdsCheckTime = 0;
 
 extern LiquidCrystal_I2C lcd;
+extern SegmentPreAmp segmentPreAmp;
 
 void onLcdKeypadRightPressed()
 {
@@ -65,22 +56,7 @@ void setup()
    Serial.print("Radio...");
    delay(500);
 
-   uint8_t q = 0;
-   bool res = false;
-   for (q = 0; q < 20; q++)
-   {
-      res = pt2314.init();
-      if (res == true)
-      {
-         break;
-      }
-      delay(100);
-   }
-
-   pt2314.channel(0);
-   pt2314.volume(1);
-   pt2314.attenuation(100, 100);
-   pt2314.gain(1);
+   segmentPreAmp.init();
 
    radio.debugEnable();
    radio.init();
