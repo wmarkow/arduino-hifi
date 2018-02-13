@@ -8,7 +8,7 @@
 #ifndef HARDWARE_PREAMPCONTROLPANEL_H_
 #define HARDWARE_PREAMPCONTROLPANEL_H_
 
-#include "PreAmp.h"
+#include "hardware/PreAmp.h"
 
 class PreAmpControlPanel
 {
