@@ -10,7 +10,7 @@
 #include "SerialRadio.h"
 #include "hardware/PT2314PreAmp.h"
 #include "hardware/RDA5807PreAmp.h"
-#include "RDSQuality.h"
+#include "rds/RDSQuality.h"
 
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
 BigCrystal bigLcd(&lcd);
