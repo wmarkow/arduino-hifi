@@ -7,7 +7,7 @@
 #include "Arduino.h"
 #include "hardware/AnalogMonostableSwitch.h"
 #include "hardware/PreAmpControlPanel.h"
-#include "SerialRadio.h"
+#include "serialradio/SerialRadio.h"
 #include "hardware/PT2314PreAmp.h"
 #include "hardware/RDA5807PreAmp.h"
 #include "rds/RDSQuality.h"

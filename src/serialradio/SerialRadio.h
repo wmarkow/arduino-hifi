@@ -9,7 +9,7 @@
 #define SERIALRADIO_H_
 
 #include <radio.h>
-#include "rds/CRDSParser.h"
+#include "../rds/CRDSParser.h"
 
 void RDS_process(uint16_t block1, uint16_t block2, uint16_t block3,
       uint16_t block4);
