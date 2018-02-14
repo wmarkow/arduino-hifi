@@ -4,15 +4,12 @@
 #include <RDA5807M.h>
 
 #include "Arduino.h"
-#include "hardware/AnalogMonostableSwitch.h"
+
 #include "segment/tuner/serialradio/SerialRadio.h"
 #include "segment/tuner/rds/RDSQuality.h"
 #include "segment/preamp/SegmentPreAmp.h"
 #include "segment/display/SegmentDisplay.h"
 #include "segment/tuner/SegmentTuner.h"
-
-AnalogMonostableSwitch lcdKeypadLeft(0, 0, 50);
-AnalogMonostableSwitch lcdKeypadRight(0, 475, 525);
 
 unsigned long lastDisplayUpdateTime = 0;
 
@@ -25,33 +22,12 @@ extern RDA5807M radio;
 extern SerialRadio serialRadio;
 extern RDSQuality rdsQuality;
 
-void onLcdKeypadRightPressed()
-{
-   Serial.println(F("RIGHT pressed"));
-   radio.seekUp(true);
-}
-
-void onLcdKeypadLeftPressed()
-{
-   Serial.println(F("LEFT pressed"));
-   radio.seekDown(true);
-}
-
-void onLcdKeypadSelectPressed()
-{
-   Serial.println(F("SELECT pressed"));
-}
-
 void setup()
 {
    Serial.begin(57600);
 
    segmentDisplay.init();
-
-   lcdKeypadRight.init();
-   lcdKeypadRight.setOnSwitchOnPtr(&onLcdKeypadRightPressed);
-   lcdKeypadLeft.init();
-   lcdKeypadLeft.setOnSwitchOnPtr(&onLcdKeypadLeftPressed);
+   segmentTuner.init();
 
    Serial.begin(57600);
    Serial.print("Radio...");
@@ -73,9 +49,10 @@ void setup()
 
 void loop()
 {
-   lcdKeypadRight.loop();
-   lcdKeypadLeft.loop();
    rdsQuality.loop();
+
+   segmentPreAmp.loop();
+   segmentTuner.loop();
 
    if (millis() - lastDisplayUpdateTime > 250)
    {
@@ -83,7 +60,6 @@ void loop()
       segmentPreAmp.updateDisplay();
       segmentTuner.updateDisplay();
 
-      segmentPreAmp.loop();
       lastDisplayUpdateTime = millis();
 //      Serial.print("RDSQ= ");
 //      Serial.println(rdsQuality.getRDSQuality());
