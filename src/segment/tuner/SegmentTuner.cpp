@@ -35,12 +35,26 @@ void SegmentTuner::init()
    lcdKeypadRight.setOnSwitchOnPtr(&onLcdKeypadRightPressed);
    lcdKeypadLeft.init();
    lcdKeypadLeft.setOnSwitchOnPtr(&onLcdKeypadLeftPressed);
+
+   radio.debugEnable();
+   radio.init();
+   radio.setMono(false);
+   radio.setMute(false);
+   radio.setVolume(15);
+
+   radio.setFrequency(9300);
+   serialRadio.init();
 }
 
 void SegmentTuner::loop()
 {
    lcdKeypadRight.loop();
    lcdKeypadLeft.loop();
+
+   radio.checkRDS();
+   rdsQuality.loop();
+
+   serialRadio.loop();
 }
 
 void SegmentTuner::updateDisplay()
