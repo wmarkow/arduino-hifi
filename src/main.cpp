@@ -7,24 +7,23 @@
 #include "hardware/AnalogMonostableSwitch.h"
 #include "segment/tuner/serialradio/SerialRadio.h"
 #include "segment/tuner/rds/RDSQuality.h"
-#include "display/display.h"
 #include "segment/preamp/SegmentPreAmp.h"
 #include "segment/display/SegmentDisplay.h"
+#include "segment/tuner/SegmentTuner.h"
 
-// hardware objects
-RDA5807M radio;
-RDSQuality rdsQuality;
-
-SerialRadio serialRadio(&radio);
 AnalogMonostableSwitch lcdKeypadLeft(0, 0, 50);
 AnalogMonostableSwitch lcdKeypadRight(0, 475, 525);
 
 unsigned long lastDisplayUpdateTime = 0;
-unsigned long lastRdsCheckTime = 0;
 
 extern LiquidCrystal_I2C lcd;
 extern SegmentPreAmp segmentPreAmp;
 extern SegmentDisplay segmentDisplay;
+extern SegmentTuner segmentTuner;
+
+extern RDA5807M radio;
+extern SerialRadio serialRadio;
+extern RDSQuality rdsQuality;
 
 void onLcdKeypadRightPressed()
 {
@@ -70,7 +69,6 @@ void setup()
    serialRadio.init();
 
    lcd.clear();
-   updateDisplay(false);
 }
 
 void loop()
@@ -83,7 +81,8 @@ void loop()
    {
       segmentDisplay.checkPhonoIssue();
       segmentPreAmp.updateDisplay();
-      updateDisplay(true);
+      segmentTuner.updateDisplay();
+
       segmentPreAmp.loop();
       lastDisplayUpdateTime = millis();
 //      Serial.print("RDSQ= ");
