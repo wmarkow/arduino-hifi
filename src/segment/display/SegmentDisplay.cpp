@@ -25,11 +25,10 @@ void SegmentDisplay::init()
    bigLcd.begin(20, 4);
    bigLcd.setAppendExtraSpaceBetweenCharacters(false);
    lcd.home();
-   lcd.clear();
    lcd.backlight();
    lcd.setBacklightPin(3, POSITIVE);
    lcd.setBacklight(HIGH);
-   lcd.print("Uruchamianie...");
+   lcd.clear();
 }
 
 void SegmentDisplay::checkPhonoIssue()

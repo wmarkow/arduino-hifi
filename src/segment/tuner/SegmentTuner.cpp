@@ -68,11 +68,11 @@ void SegmentTuner::loop()
 
 void SegmentTuner::updateDisplay()
 {
-   lcd.setCursor(6, 0);
-
    char freq[11];
    radio.getFrequency(); // need to call it to get the current frequency from the chip
    radio.formatFrequency(freq, 11);
+
+   lcd.setCursor(0, 0);
    lcd.print(freq);
 }
 
@@ -103,6 +103,9 @@ void DisplayServiceName(char *name)
 {
    Serial.print("DSN:");
    Serial.println(name);
+
+   lcd.setCursor(12, 0);
+   lcd.write(name);
 }
 
 void DisplayText(char *name)
