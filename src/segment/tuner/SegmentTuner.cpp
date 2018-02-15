@@ -22,6 +22,8 @@ SerialRadio serialRadio(&radio);
 AnalogMonostableSwitch lcdKeypadLeft(0, 0, 50);
 AnalogMonostableSwitch lcdKeypadRight(0, 475, 525);
 
+CRDSParser rds;
+
 SegmentTuner segmentTuner;
 
 SegmentTuner::SegmentTuner()
@@ -44,6 +46,13 @@ void SegmentTuner::init()
 
    radio.setFrequency(9300);
    serialRadio.init();
+
+   rds.init();
+   rds.attachServicenNameCallback(DisplayServiceName);
+   rds.attachTextCallback(DisplayText);
+   rds.attachTimeCallback(DisplayTime);
+
+   radio.attachReceiveRDS(RDS_process);
 }
 
 void SegmentTuner::loop()
@@ -82,4 +91,30 @@ void onLcdKeypadLeftPressed()
 void onLcdKeypadSelectPressed()
 {
    Serial.println(F("SELECT pressed"));
+}
+
+void RDS_process(uint16_t block1, uint16_t block2, uint16_t block3,
+      uint16_t block4)
+{
+   rds.processData(block1, block2, block3, block4);
+}
+
+void DisplayServiceName(char *name)
+{
+   Serial.print("DSN:");
+   Serial.println(name);
+}
+
+void DisplayText(char *name)
+{
+   Serial.print("Text:");
+   Serial.println(name);
+}
+
+void DisplayTime(uint8_t hour, uint8_t minute)
+{
+   Serial.print("Time:");
+   Serial.print(hour);
+   Serial.print(":");
+   Serial.println(minute);
 }
