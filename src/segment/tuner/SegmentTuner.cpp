@@ -13,14 +13,16 @@
 #include "serialradio/SerialRadio.h"
 #include "../../hardware/AnalogMonostableSwitch.h"
 
+#define TUNER_KEYPAD_ANALOG_INPUT A0
+
 extern LiquidCrystal_I2C lcd;
 
 RDA5807M radio;
 RDSQuality rdsQuality;
 SerialRadio serialRadio(&radio);
 
-AnalogMonostableSwitch lcdKeypadLeft(0, 0, 50);
-AnalogMonostableSwitch lcdKeypadRight(0, 475, 525);
+AnalogMonostableSwitch lcdKeypadLeft(TUNER_KEYPAD_ANALOG_INPUT, 0, 50);
+AnalogMonostableSwitch lcdKeypadRight(TUNER_KEYPAD_ANALOG_INPUT, 475, 525);
 
 CRDSParser rds;
 

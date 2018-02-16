@@ -18,7 +18,7 @@ AnalogMonostableSwitch::AnalogMonostableSwitch(uint8_t pin, uint16_t minValue,
 
 int AnalogMonostableSwitch::readButtonState()
 {
-   uint16_t adcRead = analogRead(0);
+   uint16_t adcRead = analogRead(pin);
 
    if (adcRead >= minValue && adcRead <= maxValue)
    {
