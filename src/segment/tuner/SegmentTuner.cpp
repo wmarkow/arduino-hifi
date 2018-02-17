@@ -22,7 +22,7 @@ RDSQuality rdsQuality;
 SerialRadio serialRadio(&radio);
 
 AnalogMonostableSwitch lcdKeypadLeft(TUNER_KEYPAD_ANALOG_INPUT, 0, 50);
-AnalogMonostableSwitch lcdKeypadRight(TUNER_KEYPAD_ANALOG_INPUT, 475, 525);
+AnalogMonostableSwitch lcdKeypadRight(TUNER_KEYPAD_ANALOG_INPUT, 500, 600);
 
 CRDSParser rds;
 
