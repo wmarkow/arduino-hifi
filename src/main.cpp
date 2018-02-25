@@ -1,8 +1,12 @@
 #include "Arduino.h"
 
+#include <CrashTracking/ApplicationMonitor.h>
+
 #include "segment/preamp/SegmentPreAmp.h"
 #include "segment/display/SegmentDisplay.h"
 #include "segment/tuner/SegmentTuner.h"
+
+Watchdog::CApplicationMonitor ApplicationMonitor;
 
 unsigned long lastDisplayUpdateTime = 0;
 
@@ -14,6 +18,9 @@ void setup()
 {
    Serial.begin(57600);
 
+   ApplicationMonitor.Dump(Serial);
+   ApplicationMonitor.EnableWatchdog(Watchdog::CApplicationMonitor::Timeout_4s);
+
    segmentDisplay.init();
    segmentPreAmp.init();
    segmentTuner.init();
@@ -21,6 +28,8 @@ void setup()
 
 void loop()
 {
+   ApplicationMonitor.IAmAlive();
+
    segmentPreAmp.loop();
    segmentTuner.loop();
 
