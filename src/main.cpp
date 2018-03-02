@@ -47,6 +47,5 @@ void loop()
 //      Serial.println(rdsQuality.getRDSQuality());
 
       digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-      lastBlinkTime = millis();
    }
 }
