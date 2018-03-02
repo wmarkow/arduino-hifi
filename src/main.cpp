@@ -1,5 +1,6 @@
 #include "Arduino.h"
 
+#include <Wire.h>
 #include <CrashTracking/ApplicationMonitor.h>
 
 #include "segment/preamp/SegmentPreAmp.h"
@@ -24,6 +25,8 @@ void setup()
    segmentDisplay.init();
    segmentPreAmp.init();
    segmentTuner.init();
+
+   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
@@ -42,5 +45,8 @@ void loop()
       lastDisplayUpdateTime = millis();
 //      Serial.print("RDSQ= ");
 //      Serial.println(rdsQuality.getRDSQuality());
+
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+      lastBlinkTime = millis();
    }
 }
