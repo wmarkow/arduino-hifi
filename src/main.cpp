@@ -18,6 +18,7 @@ extern SegmentTuner segmentTuner;
 void setup()
 {
    Serial.begin(57600);
+   Wire.setTimeoutInMillis(50);
 
    ApplicationMonitor.Dump(Serial);
    ApplicationMonitor.EnableWatchdog(Watchdog::CApplicationMonitor::Timeout_4s);
