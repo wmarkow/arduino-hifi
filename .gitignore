@@ -28,8 +28,10 @@
 *.app
 
 Release/**
+/Release/
 .settings/**
 core/**
 libraries/**
 .project
 .cproject
+spec.d
