@@ -33,3 +33,5 @@ core/**
 libraries/**
 .project
 .cproject
+/Release/
+spec.d
