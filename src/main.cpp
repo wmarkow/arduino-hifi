@@ -18,7 +18,7 @@ extern SegmentTuner segmentTuner;
 void setup()
 {
    Serial.begin(57600);
-   Wire.setTimeoutInMillis(10);
+   Wire.setWireTimeoutUs(10000ul, true);
 
    ApplicationMonitor.Dump(Serial);
    ApplicationMonitor.EnableWatchdog(Watchdog::CApplicationMonitor::Timeout_4s);
@@ -34,20 +34,21 @@ void loop()
 {
    ApplicationMonitor.IAmAlive();
 
-//   if (Wire.isTimeoutFailure())
-//   {
-//      Wire.end();
-//      Wire.begin();
-//     Wire.clearTimeoutFailure();
-//      segmentDisplay.init();
-//      ApplicationMonitor.IAmAlive();
-//
-//      segmentPreAmp.init();
-//      ApplicationMonitor.IAmAlive();
-//
-//      segmentTuner.init();
-//      ApplicationMonitor.IAmAlive();
-//   }
+   if (Wire.getWireTimeoutFlag())
+   {
+      Wire.clearWireTimeoutFlag();
+      Wire.end();
+      Wire.begin();
+
+      segmentDisplay.init();
+      ApplicationMonitor.IAmAlive();
+
+      segmentPreAmp.init();
+      ApplicationMonitor.IAmAlive();
+
+      segmentTuner.init();
+      ApplicationMonitor.IAmAlive();
+   }
 
    segmentPreAmp.loop();
    segmentTuner.loop();
