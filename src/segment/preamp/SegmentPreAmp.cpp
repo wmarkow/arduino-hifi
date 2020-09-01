@@ -56,7 +56,7 @@ void SegmentPreAmp::init()
    pt2314.channel(0);
    pt2314.volume(1);
    pt2314.attenuation(100, 100);
-   pt2314.gain(1);
+   pt2314.gain(3);
 }
 
 void SegmentPreAmp::loop()
