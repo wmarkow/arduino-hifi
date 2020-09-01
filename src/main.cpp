@@ -1,5 +1,6 @@
 #include "Arduino.h"
 
+#include <Wire.h>
 #include <CrashTracking/ApplicationMonitor.h>
 
 #include "segment/preamp/SegmentPreAmp.h"
@@ -17,6 +18,7 @@ extern SegmentTuner segmentTuner;
 void setup()
 {
    Serial.begin(57600);
+   Wire.setWireTimeoutUs(10000ul, true);
 
    ApplicationMonitor.Dump(Serial);
    ApplicationMonitor.EnableWatchdog(Watchdog::CApplicationMonitor::Timeout_4s);
@@ -24,11 +26,29 @@ void setup()
    segmentDisplay.init();
    segmentPreAmp.init();
    segmentTuner.init();
+
+   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
 {
    ApplicationMonitor.IAmAlive();
+
+   if (Wire.getWireTimeoutFlag())
+   {
+      Wire.clearWireTimeoutFlag();
+      Wire.end();
+      Wire.begin();
+
+      segmentDisplay.init();
+      ApplicationMonitor.IAmAlive();
+
+      segmentPreAmp.init();
+      ApplicationMonitor.IAmAlive();
+
+      segmentTuner.init();
+      ApplicationMonitor.IAmAlive();
+   }
 
    segmentPreAmp.loop();
    segmentTuner.loop();
@@ -42,5 +62,7 @@ void loop()
       lastDisplayUpdateTime = millis();
 //      Serial.print("RDSQ= ");
 //      Serial.println(rdsQuality.getRDSQuality());
+
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
    }
 }

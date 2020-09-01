@@ -28,6 +28,7 @@
 *.app
 
 Release/**
+/Release/
 .settings/**
 core/**
 libraries/**

@@ -25,6 +25,10 @@ SegmentPreAmp segmentPreAmp(&pt2314PreAmp);
 extern LiquidCrystal_I2C lcd;
 extern BigCrystal bigLcd;
 
+
+#define VOLUME_MAX_DELTA 20
+#define VOLUME_MAX 1023 / VOLUME_MAX_DELTA / 2
+
 SegmentPreAmp::SegmentPreAmp(PreAmp *preAmp)
 {
    this->preAmp = preAmp;
@@ -52,7 +56,7 @@ void SegmentPreAmp::init()
    pt2314.channel(0);
    pt2314.volume(1);
    pt2314.attenuation(100, 100);
-   pt2314.gain(1);
+   pt2314.gain(3);
 }
 
 void SegmentPreAmp::loop()
@@ -66,6 +70,11 @@ void SegmentPreAmp::updateDisplay()
    lcd.setCursor(18, 2);
 
    uint8_t volume = segmentPreAmp.getPreAmp()->getVolume();
+   if (volume >= 100)
+   {
+      // we have only two digits to show volume
+      volume = 99;
+   }
    char vol[3];
    itoa(volume, vol, 10);
    if (volume <= 9)
@@ -96,10 +105,27 @@ void SegmentPreAmp::updateDisplay()
 
 void SegmentPreAmp::checkVolumePot()
 {
+   // The reading from ADC of the potentiometer can have a variation (deviation).
+   // The 'VOLUME_MAX_DELTA' variable is the max wide of those variations. To avoid volume
+   // changes because of this variations the whole potentiometer area is divided
+   // into sections.
+   // So we have: volume section, void section, volume section, void section,...
+   // volume section is the section where a real volume can be set
+   // void section is just a space where analog reading variations can be omitted.
+   // between real volume sections.
+   // Max potentiometer reading is 1023. Every section is 'VOLUME_MAX_DELTA' wide.
    uint16_t volumeInput = analogRead(VOLUME_ANALOG_INPUT);
-   uint8_t volume = map(volumeInput, 0, 1023, preAmp->MIN_VOLUME,
+   uint8_t sectionNumber = volumeInput / VOLUME_MAX_DELTA;
+   if (sectionNumber % 2 == 1)
+   {
+      // this is a void space of the potentiometer
+      // do nothing
+      return;
+   }
+   // we have a real volume reading
+   uint8_t volumeSection = sectionNumber / 2;
+   uint8_t volume = map(volumeSection, 0, VOLUME_MAX, preAmp->MIN_VOLUME,
          preAmp->MAX_VOLUME);
-
    preAmp->setVolume(volume);
 }
 
