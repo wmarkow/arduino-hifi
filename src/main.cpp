@@ -1,7 +1,7 @@
-#include "Arduino.h"
+#include <Arduino.h>
 
 #include <Wire.h>
-#include <CrashTracking/ApplicationMonitor.h>
+#include <ApplicationMonitor.h>
 
 #include "segment/preamp/SegmentPreAmp.h"
 #include "segment/display/SegmentDisplay.h"
@@ -18,7 +18,7 @@ extern SegmentTuner segmentTuner;
 void setup()
 {
    Serial.begin(57600);
-   Wire.setWireTimeoutUs(10000ul, true);
+   Wire.setWireTimeout(10000ul, true);
 
    ApplicationMonitor.Dump(Serial);
    ApplicationMonitor.EnableWatchdog(Watchdog::CApplicationMonitor::Timeout_4s);
